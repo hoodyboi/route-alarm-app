@@ -1,16 +1,11 @@
-# Compiled class file
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
+logs/
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,6 +14,48 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
+
+# macOS specific files
+.DS_Store
+
+# Gradle related files
+.gradle/
+/build/
+!gradle/wrapper/gradle-wrapper.jar  # This specific file should be kept
+
+# IDE specific files
+.idea/      # IntelliJ IDEA project files
+*.iml       # IntelliJ IDEA module files
+*.ipr       # IntelliJ IDEA project files
+*.iws       # IntelliJ IDEA workspace files
+.vscode/    # VS Code settings and files
+
+# STS (Spring Tool Suite) specific files
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+bin/
+
+# NetBeans specific files
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Documentation files (if present and not wanted in Git)
+HELP.md
+
+# Environment variables or sensitive data
+# Do NOT commit these files to GitHub!
+application-*.properties
+application-*.yml
+!application.properties # Keep default application.properties if it's not sensitive
+!application.yml      # Keep default application.yml if it's not sensitive
