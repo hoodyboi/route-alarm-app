@@ -1,8 +1,6 @@
 package com.example.route_alarm_app.controller;
 
-import com.example.route_alarm_app.dto.UserResponseDto;
-import com.example.route_alarm_app.dto.UserSignUpRequestDto;
-import com.example.route_alarm_app.dto.UserUpdateRequestDto;
+import com.example.route_alarm_app.dto.*;
 import com.example.route_alarm_app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,7 +48,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    // 로그인 API
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid UserLoginRequestDto requestDto){
+        LoginResponseDto responseDto = userService.login(requestDto);
 
+        return ResponseEntity.ok(responseDto);
+    }
 
-
+    // 사용자 정보 업데이트 API
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> updatedUser(
+            @PathVariable Long userId,
+            @RequestBody @Valid UserUpdateRequestDto requestDto){
+        UserResponseDto responseDto = userService.updatedUser(userId, requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 }

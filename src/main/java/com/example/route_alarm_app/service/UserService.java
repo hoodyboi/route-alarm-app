@@ -1,14 +1,13 @@
 package com.example.route_alarm_app.service;
 
 import com.example.route_alarm_app.domain.User;
-import com.example.route_alarm_app.dto.UserUpdateRequestDto;
+import com.example.route_alarm_app.dto.*;
 import com.example.route_alarm_app.repository.UserRepository;
-import com.example.route_alarm_app.dto.UserSignUpRequestDto;
-import com.example.route_alarm_app.dto.UserLoginRequestDto;
-import com.example.route_alarm_app.dto.UserResponseDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-
+    @Transactional
     public UserResponseDto signup(UserSignUpRequestDto requestDto){
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
@@ -45,6 +44,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public UserResponseDto getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
@@ -61,26 +61,26 @@ public class UserService {
         );
     }
 
+    @Transactional
     public UserResponseDto updatedUser(Long userId, UserUpdateRequestDto requestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
+        String finalEmail = user.getEmail();
+        String finalPassword = user.getPassword();
+        String finalRole = user.getRole();
+
         if (requestDto.getEmail() != null && !requestDto.getEmail().isEmpty()) {
-            user.update(requestDto.getEmail(), user.getPassword(), user.getRole());
+            finalEmail = requestDto.getEmail();
         }
         if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
-            String encodedNewPassword = passwordEncoder.encode(requestDto.getNewPassword());
-            user.update(user.getEmail(), encodedNewPassword, user.getRole());
+            finalPassword = passwordEncoder.encode(requestDto.getNewPassword());
         }
         if (requestDto.getRole() != null && !requestDto.getRole().isEmpty()) {
-            user.update(user.getEmail(), user.getPassword(), requestDto.getRole());
+            finalRole = requestDto.getRole();
         }
 
-        user.update(
-                requestDto.getEmail() != null ? requestDto.getEmail() : user.getEmail(),
-                requestDto.getNewPassword() != null ? passwordEncoder.encode(requestDto.getNewPassword()) : user.getPassword(),
-                requestDto.getRole() != null ? requestDto.getRole() : user.getRole()
-        );
+        user.update(finalEmail, finalPassword, finalRole);
 
         User updateUser = userRepository.save(user);
 
@@ -95,6 +95,8 @@ public class UserService {
                 updateUser.getUuid()
         );
     }
+
+    @Transactional
     public void deleteUser(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
@@ -102,5 +104,25 @@ public class UserService {
         user.delete();
         userRepository.save(user);
     }
+
+    @Transactional(readOnly = true)
+    public LoginResponseDto login(UserLoginRequestDto requestDto){
+        User user = userRepository.findByLoginId(requestDto.getLoginId())
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다."));// 사용자 없을 경우 예외
+
+        if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        String dummyToken = "dummy_jwt_token_for_" + user.getLoginId();
+
+        return new LoginResponseDto(
+                user.getUserId(),
+                user.getLoginId(),
+                dummyToken //임시토큰 반환
+        );
+
+    }
+
 }
 
