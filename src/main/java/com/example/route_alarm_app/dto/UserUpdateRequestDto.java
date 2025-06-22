@@ -16,7 +16,7 @@ public class UserUpdateRequestDto {
     @Email(message = "유효한 이메일 형식이 아닙니다")
     private String email;
 
-    @Size(min = 8, max = 20, message = "비밀번호는 8~20자여야 합니다.")
+    @Size(min = 8, max = 255, message = "비밀번호는 8~20자여야 합니다.")
     private String newPassword;
 
     private String role;

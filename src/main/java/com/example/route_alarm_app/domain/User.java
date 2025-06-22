@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
@@ -43,7 +43,7 @@ public class User {
     @Column(name = "oauth_id", length = 64)
     private String oauthId;
 
-    @Column(length = 36, unique = true)
+    @Column(name = "uuid", length = 36, unique = true)
     private String uuid;
 
     @Builder
@@ -64,11 +64,11 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void delete(){
         this.isDeleted = true;
         this.updatedAt = LocalDateTime.now();
     }
-
 }
