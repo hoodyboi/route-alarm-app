@@ -2,12 +2,14 @@ package com.example.route_alarm_app.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "routed")
+@Table(name = "routes")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
@@ -37,6 +39,7 @@ public class Route {
     private BigDecimal dstLng;
 
     @Column(name = "waypoints", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String waypoints;
 
     @Column(name = "created_at", nullable = false, updatable = false)

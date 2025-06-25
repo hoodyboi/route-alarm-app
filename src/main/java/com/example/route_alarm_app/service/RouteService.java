@@ -61,7 +61,7 @@ public class RouteService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        List<Route> routes = routeRepository.findByUserID(userId);
+        List<Route> routes = routeRepository.findByUserId(userId);
 
         return routes.stream()
                 .map(this::convertToDto)
