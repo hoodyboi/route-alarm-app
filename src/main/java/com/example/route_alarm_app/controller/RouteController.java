@@ -46,6 +46,11 @@ public class RouteController {
     }
 
     // 특정 경로 조회 API (GET /api/routes/{routeId})
+    @Operation(summary = "특정 경로 조회", description = "특정 경로 ID를 통해 상세 정보를 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "조회 성공",
+        content = @Content(schema = @Schema(implementation = RouteResponseDto.class)))
+    @ApiResponse(responseCode = "404", description = "경로를 찾을 수 없음")
+    @GetMapping("{routeId}")
     public ResponseEntity<RouteResponseDto> getRouteInfo(
             @Parameter(description = "조회할 경로 ID", example = "1", required = true)
             @PathVariable Long routeId){

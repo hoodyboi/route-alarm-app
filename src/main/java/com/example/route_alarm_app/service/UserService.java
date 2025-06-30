@@ -4,6 +4,7 @@ import com.example.route_alarm_app.domain.User;
 import com.example.route_alarm_app.dto.*;
 import com.example.route_alarm_app.repository.UserRepository;
 
+import com.example.route_alarm_app.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public UserResponseDto signup(UserSignUpRequestDto requestDto){
@@ -114,15 +116,16 @@ public class UserService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        String dummyToken = "dummy_jwt_token_for_" + user.getLoginId();
+        String accessToken = jwtTokenProvider.generateAccessToken(
+                user.getUserId().toString(),
+                user.getRole()
+        );
 
         return new LoginResponseDto(
                 user.getUserId(),
                 user.getLoginId(),
-                dummyToken //임시토큰 반환
+                accessToken
         );
-
     }
-
 }
 
