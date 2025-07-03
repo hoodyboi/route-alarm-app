@@ -25,7 +25,6 @@ public class UserSignUpRequestDto {
     @Size(min = 8, max = 20, message = "비밀번호는 8~20자여야 합니다.")
     private String password;
 
-
     private String role;
     private String oauthType;
     private String oauthId;

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: route-alarm-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: route-alarm-app
+  template:
+    metadata:
+        labels:
+          app: route-alarm-app
+    spec:
+      containers:
+          - name: route-alarm-app-container
+            image: route-alarm-app:latest
+            imagePullPolicy: IfNotPresent
+            ports:
+              - containerPort: 8080

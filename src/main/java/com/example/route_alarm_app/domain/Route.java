@@ -74,7 +74,7 @@ public class Route {
 
     public void update(String routeName, BigDecimal srcLat, BigDecimal srcLng, BigDecimal dstLat, BigDecimal dstLng,
                        String waypoints){
-        this.userId = routeId;
+        this.routeName = routeName;
         this.srcLat = srcLat;
         this.srcLng = srcLng;
         this.dstLat = dstLat;
