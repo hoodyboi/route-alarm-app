@@ -111,6 +111,7 @@ public class RouteService {
                 route.getWaypoints(),
                 route.getCreatedAt(),
                 route.getUpdatedAt(),
+                route.getIsDeleted(),
                 route.getUuid()
         );
     }

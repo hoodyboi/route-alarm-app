@@ -3,8 +3,8 @@ package com.example.route_alarm_app.domain;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,8 +22,8 @@ public class RoadEvent {
     @Column(name = "event_type", nullable = false, length = 20)
     private String eventType;
 
-    @Column(name = "location", nullable = false, length = 100)
-    private String location;
+    @Column(columnDefinition = "POINT")
+    private Point location;
 
     @Column(name = "severity")
     private Integer severity;
@@ -44,7 +44,7 @@ public class RoadEvent {
     private LocalDateTime updatedAt;
 
     @Builder
-    public RoadEvent(String eventType, String location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
+    public RoadEvent(String eventType, Point location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
                      String description){
         this.eventType = eventType;
         this.location = location;
@@ -57,7 +57,7 @@ public class RoadEvent {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(String eventType, String location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
+    public void update(String eventType, Point location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
                        String description){
         this.eventType = eventType;
         this.location = location;
