@@ -1,5 +1,6 @@
 package com.example.route_alarm_app.domain;
 
+import com.example.route_alarm_app.dto.AccInfoRow;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.*;
@@ -18,6 +19,10 @@ public class RoadEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "road_event_id")
     private Long roadEventId;
+
+    // 공공 API에서 주는 돌발 아이디
+    @Column(name = "acc_id", unique = true)
+    private Long accId;
 
     @Column(name = "event_type", nullable = false, length = 20)
     private String eventType;
@@ -44,8 +49,9 @@ public class RoadEvent {
     private LocalDateTime updatedAt;
 
     @Builder
-    public RoadEvent(String eventType, Point location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
+    public RoadEvent(Long accId, String eventType, Point location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
                      String description){
+        this.accId = accId;
         this.eventType = eventType;
         this.location = location;
         this.severity = severity;
@@ -57,14 +63,10 @@ public class RoadEvent {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(String eventType, Point location, Integer severity, LocalDateTime startedAt, LocalDateTime endedAt,
-                       String description){
-        this.eventType = eventType;
-        this.location = location;
-        this.severity = severity;
-        this.startedAt = startedAt;
-        this.endedAt = endedAt;
-        this.description = description;
+    public void update(AccInfoRow row, Point newLocationPoint){
+        this.eventType = row.getAccType();
+        this.description = row.getAccInfo();
+        this.location = newLocationPoint;
 
         this.updatedAt = LocalDateTime.now();
     }

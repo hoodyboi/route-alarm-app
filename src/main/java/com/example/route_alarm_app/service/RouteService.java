@@ -2,8 +2,12 @@ package com.example.route_alarm_app.service;
 
 import com.example.route_alarm_app.domain.Route;
 import com.example.route_alarm_app.domain.User;
+import com.example.route_alarm_app.domain.RoadEvent;
+import com.example.route_alarm_app.dto.RoadEventResponseDto;
 import com.example.route_alarm_app.dto.RouteRequestDto;
 import com.example.route_alarm_app.dto.RouteResponseDto;
+import com.example.route_alarm_app.dto.RoadEventRequestDto;
+import com.example.route_alarm_app.repository.RoadEventRepository;
 import com.example.route_alarm_app.repository.RouteRepository;
 import com.example.route_alarm_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,8 @@ public class RouteService {
 
     private final RouteRepository routeRepository;
     private final UserRepository userRepository;
+    private final RoadEventRepository roadEventRepository;
+
 
     // 경로 생성 메서드
     @Transactional
@@ -96,6 +102,22 @@ public class RouteService {
 
         route.delete();
         routeRepository.save(route);
+    }
+
+    // 특정 경로 주변의 돌발 이벤트를 검색하는 메소드
+    @Transactional(readOnly = true)
+    public List<RoadEventResponseDto> findNearbyEventForRoute(Long routeId, int distance){
+        Route route = routeRepository.findById(routeId)
+                .orElseThrow(()-> new IllegalArgumentException("경로를 찾을 수 없습니다."));
+
+        double centerLat = (route.getSrcLat().doubleValue() + route.getDstLat().doubleValue()) / 2;
+        double centerLng = (route.getSrcLat().doubleValue() + route.getDstLng().doubleValue()) / 2;
+
+        List<RoadEvent> events = roadEventRepository.findEventsWithDistance(centerLat, centerLng, distance);
+
+        return events.stream()
+                .map(RoadEventResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     // DTO 변환

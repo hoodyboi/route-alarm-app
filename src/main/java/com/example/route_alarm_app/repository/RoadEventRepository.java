@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoadEventRepository extends JpaRepository<RoadEvent, Long> {
@@ -38,4 +39,5 @@ public interface RoadEventRepository extends JpaRepository<RoadEvent, Long> {
             @Param("distance") int distanceInMeters
     );
 
+    Optional<RoadEvent> findByAccId(Long accId);
 }
