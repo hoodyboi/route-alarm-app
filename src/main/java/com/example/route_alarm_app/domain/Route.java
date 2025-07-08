@@ -20,8 +20,9 @@ public class Route {
     @Column(name = "route_id")
     private Long routeId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "route_name", nullable = false, length = 50)
     private String routeName;
@@ -55,9 +56,9 @@ public class Route {
     private String uuid;
 
     @Builder
-    public Route(Long userId, String routeName, BigDecimal srcLat, BigDecimal srcLng, BigDecimal dstLat, BigDecimal dstLng,
+    public Route(User user, String routeName, BigDecimal srcLat, BigDecimal srcLng, BigDecimal dstLat, BigDecimal dstLng,
                  String waypoints, String uuid){
-        this.userId = userId;
+        this.user = user;
         this.routeName = routeName;
         this.srcLat = srcLat;
         this.srcLng = srcLng;

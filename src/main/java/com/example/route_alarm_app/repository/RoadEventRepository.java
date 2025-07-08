@@ -32,8 +32,9 @@ public interface RoadEventRepository extends JpaRepository<RoadEvent, Long> {
      * @param distanceInMeters 검색할 반경 (미터)
      * @return List<RoadEvent>
      */
-    @Query(value = "SELECT * FROM road_events WHERE ST_DWithin(location, ST_MakePoint(:lng, :lat), :distance)", nativeQuery = true)
-    List<RoadEvent> findEventsWithDistance(
+
+    @Query(value = "SELECT * FROM road_events WHERE ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography, :distance)", nativeQuery = true)
+    List<RoadEvent> findEventsWithinDistance(
             @Param("lat") double lat,
             @Param("lng") double lng,
             @Param("distance") int distanceInMeters

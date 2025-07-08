@@ -1,5 +1,6 @@
 package com.example.route_alarm_app.controller;
 
+import com.example.route_alarm_app.dto.RoadEventResponseDto;
 import com.example.route_alarm_app.dto.RouteRequestDto;
 import com.example.route_alarm_app.dto.RouteResponseDto;
 import com.example.route_alarm_app.service.RouteService;
@@ -99,5 +100,16 @@ public class RouteController {
             @PathVariable Long routeId){
         routeService.deleteRoute(routeId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // 특정 경로 주변의 돌발 이벤트 목록 조회 API
+    // ex) /api/routes/123/nearby-events?distance=2000 (2km 반경)
+    @GetMapping("/{routeId}/nearby-events")
+    public ResponseEntity<List<RoadEventResponseDto>> getNearbyEvents(
+            @PathVariable Long routeId,
+            @RequestParam(defaultValue = "1000") int distance
+    ){
+        List<RoadEventResponseDto> events = routeService.findNearbyEventForRoute(routeId, distance);
+        return ResponseEntity.ok(events);
     }
 }

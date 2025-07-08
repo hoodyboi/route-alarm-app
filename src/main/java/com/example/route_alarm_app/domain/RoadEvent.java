@@ -27,7 +27,7 @@ public class RoadEvent {
     @Column(name = "event_type", nullable = false, length = 20)
     private String eventType;
 
-    @Column(columnDefinition = "POINT")
+    @Column(columnDefinition = "geography(Point,4326)")
     private Point location;
 
     @Column(name = "severity")

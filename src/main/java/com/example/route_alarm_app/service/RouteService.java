@@ -38,7 +38,7 @@ public class RouteService {
                 requestDto.getUuid() : UUID.randomUUID().toString();
 
         Route route = Route.builder()
-                .userId(requestDto.getUserId())
+                .user(user)
                 .routeName(requestDto.getRouteName())
                 .srcLat(requestDto.getSrcLat())
                 .srcLng(requestDto.getSrcLng())
@@ -67,7 +67,7 @@ public class RouteService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        List<Route> routes = routeRepository.findByUserId(userId);
+        List<Route> routes = routeRepository.findByUserUserId(userId);
 
         return routes.stream()
                 .map(this::convertToDto)
@@ -113,7 +113,7 @@ public class RouteService {
         double centerLat = (route.getSrcLat().doubleValue() + route.getDstLat().doubleValue()) / 2;
         double centerLng = (route.getSrcLat().doubleValue() + route.getDstLng().doubleValue()) / 2;
 
-        List<RoadEvent> events = roadEventRepository.findEventsWithDistance(centerLat, centerLng, distance);
+        List<RoadEvent> events = roadEventRepository.findEventsWithinDistance(centerLat, centerLng, distance);
 
         return events.stream()
                 .map(RoadEventResponseDto::new)
@@ -124,7 +124,7 @@ public class RouteService {
     private RouteResponseDto convertToDto(Route route) {
         return new RouteResponseDto(
                 route.getRouteId(),
-                route.getUserId(),
+                route.getUser().getUserId(),
                 route.getRouteName(),
                 route.getSrcLat(),
                 route.getSrcLng(),

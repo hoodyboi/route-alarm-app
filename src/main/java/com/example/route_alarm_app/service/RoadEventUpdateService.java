@@ -71,6 +71,9 @@ public class RoadEventUpdateService {
         ProjCoordinate after = new ProjCoordinate();
         transform.transform(before, after);
 
-        return geometryFactory.createPoint(new Coordinate(after.x, after.y));
+        Point point = geometryFactory.createPoint(new Coordinate(after.x, after.y));
+        point.setSRID(4326);
+
+        return point;
     }
 }

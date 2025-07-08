@@ -47,7 +47,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	// 좌표계 변환을 위한 라이브러리
 	implementation 'org.locationtech.proj4j:proj4j:1.2.1'
-
+	implementation 'org.hibernate:hibernate-spatial:6.2.7.Final'
+	implementation 'net.postgis:postgis-jdbc:2023.1.0'
 	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
