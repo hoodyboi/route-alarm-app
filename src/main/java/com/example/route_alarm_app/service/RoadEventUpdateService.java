@@ -23,7 +23,20 @@ public class RoadEventUpdateService {
 
     private final PublicDataApiClient apiClient;
     private final RoadEventRepository roadEventRepository;
-    private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final GeometryFactory geometryFactory;
+
+    private final CoordinateTransform coordinateTransform;
+
+    public RoadEventUpdateService(PublicDataApiClient apiClient, RoadEventRepository roadEventRepository, GeometryFactory geometryFactory){
+        this.apiClient = apiClient;
+        this.roadEventRepository = roadEventRepository;
+        this.geometryFactory = geometryFactory;
+
+        CRSFactory crsFactory = new CRSFactory();
+        CoordinateReferenceSystem grs80 = crsFactory.createFromName("EPSG:5181");
+        CoordinateReferenceSystem wgs84 = crsFactory.createFromName("EPSG:4326");
+        this.coordinateTransform = new CoordinateTransformFactory().createTransform(grs80, wgs84);
+    }
 
     /**
      1시간에 한 번씩 공공 API를 호출하여 도로 이벤트 정보를 업데이트합니다.
@@ -61,18 +74,12 @@ public class RoadEventUpdateService {
     }
 
     private Point convertTmToWgs84(double tmX, double tmY) {
-        CRSFactory crsFactory = new CRSFactory();
-
-        CoordinateReferenceSystem grs80 = crsFactory.createFromName("EPSG:5181");
-        CoordinateReferenceSystem wgs84 = crsFactory.createFromName("EPSG:4326");
-
-        CoordinateTransform transform = new CoordinateTransformFactory().createTransform(grs80, wgs84);
         ProjCoordinate before = new ProjCoordinate(tmX, tmY);
         ProjCoordinate after = new ProjCoordinate();
-        transform.transform(before, after);
+
+        coordinateTransform.transform(before, after);
 
         Point point = geometryFactory.createPoint(new Coordinate(after.x, after.y));
-        point.setSRID(4326);
 
         return point;
     }

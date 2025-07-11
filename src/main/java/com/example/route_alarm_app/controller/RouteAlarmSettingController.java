@@ -13,20 +13,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/routes/{routesId}/alarm-settings")
 public class RouteAlarmSettingController {
 
-    private final RouteAlarmSettingService settingService;
+    private final RouteAlarmSettingService routeAlarmSettingService;
 
+    // 특정 경로의 알림 설정 조회 API
     @GetMapping
-    public ResponseEntity<RouteAlarmSettingResponseDto> getSetting(@PathVariable Long routeId){
-        RouteAlarmSettingResponseDto responseDto = settingService.getSetting(routeId);
-
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<RouteAlarmSettingResponseDto> getAlarmSetting(@PathVariable Long routeId){
+        RouteAlarmSettingResponseDto settingDto = routeAlarmSettingService.getAlarmSetting(routeId);
+        return ResponseEntity.ok(settingDto);
     }
 
+    // 특정 경로의 알림 설정 업데이트 API
     @PutMapping
-    public ResponseEntity<Void> updateSetting(
+    public ResponseEntity<RouteAlarmSettingResponseDto> updateAlarmSetting(
             @PathVariable Long routeId,
-            @RequestBody RouteAlarmSettingUpdateRequestDto requestDto){
-        settingService.updateSetting(routeId, requestDto);
-        return ResponseEntity.ok().build();
+            @RequestBody RouteAlarmSettingUpdateRequestDto requestDto
+    ){
+        RouteAlarmSettingResponseDto updatedSettingDto = routeAlarmSettingService.updateAlarmSetting(routeId, requestDto);
+        return ResponseEntity.ok(updatedSettingDto);
     }
 }

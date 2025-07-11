@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.LineString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,9 +40,8 @@ public class Route {
     @Column(name = "dst_lng", nullable = false, precision = 10, scale = 7)
     private BigDecimal dstLng;
 
-    @Column(name = "waypoints", columnDefinition = "jsonb")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private String waypoints;
+    @Column(columnDefinition = "geography(LineString, 4326")
+    private LineString path;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -56,16 +56,16 @@ public class Route {
     private String uuid;
 
     @Builder
-    public Route(User user, String routeName, BigDecimal srcLat, BigDecimal srcLng, BigDecimal dstLat, BigDecimal dstLng,
-                 String waypoints, String uuid){
+    public Route(User user, String routeName, LineString path, BigDecimal srcLat, BigDecimal srcLng, BigDecimal dstLat,
+                 BigDecimal dstLng, String uuid){
         this.user = user;
         this.routeName = routeName;
+        this.path = path;
         this.srcLat = srcLat;
         this.srcLng = srcLng;
         this.dstLat = dstLat;
         this.dstLng = dstLng;
         this.uuid = uuid;
-        this.waypoints = waypoints;
 
         // 필드 기본값 설정
         this.createdAt = LocalDateTime.now();
@@ -74,14 +74,13 @@ public class Route {
     }
 
     public void update(String routeName, BigDecimal srcLat, BigDecimal srcLng, BigDecimal dstLat, BigDecimal dstLng,
-                       String waypoints){
-        this.routeName = routeName;
-        this.srcLat = srcLat;
-        this.srcLng = srcLng;
-        this.dstLat = dstLat;
-        this.dstLng = dstLng;
-        this.waypoints = waypoints;
-        this.updatedAt = LocalDateTime.now();
+                       LineString path){
+        if(routeName != null) { this.routeName = routeName; }
+        if(path != null) { this.path = path; }
+        if(srcLat != null) { this.srcLat = srcLat; }
+        if(srcLng != null) { this.srcLng = srcLng; }
+        if(dstLat != null) { this.dstLat = dstLat; }
+        if(dstLng != null) { this.dstLng = dstLng; }
     }
 
     public void delete() {

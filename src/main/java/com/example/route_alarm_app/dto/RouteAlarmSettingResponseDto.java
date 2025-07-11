@@ -12,7 +12,7 @@ public class RouteAlarmSettingResponseDto {
     private Boolean congestionAlert;
 
     public RouteAlarmSettingResponseDto(RouteAlarmSetting entity){
-        this.routeId = entity.getRouteId();
+        this.routeId = entity.getRoute().getRouteId();
 
         this.protestAlert = entity.getProtestAlert();
         this.constructionAlert = entity.getConstructionAlert();

@@ -1,9 +1,7 @@
 package com.example.route_alarm_app.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.route_alarm_app.dto.RouteAlarmSettingUpdateRequestDto;
+import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -15,17 +13,21 @@ import java.time.LocalDateTime;
 public class RouteAlarmSetting {
 
     @Id
-    @Column(name = "route_id")
-    private Long routeId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "route_id", unique = true)
+    private Route route;
 
     @Column(name = "protest_alert", nullable = false)
-    private Boolean protestAlert;
+    private Boolean protestAlert = true;
 
     @Column(name = "construction_alert", nullable = false)
-    private Boolean constructionAlert;
+    private Boolean constructionAlert = true;
 
     @Column(name = "congestion_alert", nullable = false)
-    private Boolean congestionAlert;
+    private Boolean congestionAlert = true;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -33,21 +35,26 @@ public class RouteAlarmSetting {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Builder
-    public RouteAlarmSetting(Long routeId, Boolean protestAlert, Boolean constructionAlert, Boolean congestionAlert){
-        this.routeId = routeId;
-        this.protestAlert = protestAlert;
-        this.constructionAlert = constructionAlert;
-        this.congestionAlert = congestionAlert;
+    @PrePersist
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(Boolean protestAlert, Boolean constructionAlert, Boolean congestionAlert){
-        this.protestAlert = protestAlert;
-        this.constructionAlert = constructionAlert;
-        this.congestionAlert = congestionAlert;
+    @PreUpdate
+    public void preUpdate(){
         this.updatedAt = LocalDateTime.now();
+    }
+
+    @Builder
+    public RouteAlarmSetting(Route route){
+        this.route = route;
+    }
+
+    public void update(RouteAlarmSettingUpdateRequestDto requestDto){
+        this.protestAlert = requestDto.getProtestAlert();
+        this.constructionAlert = requestDto.getConstructionAlert();
+        this.congestionAlert = requestDto.getCongestionAlert();
     }
 
 }

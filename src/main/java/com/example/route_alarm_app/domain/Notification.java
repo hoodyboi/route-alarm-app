@@ -2,6 +2,8 @@ package com.example.route_alarm_app.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,49 +16,54 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
-    private Long notificationId;
+    private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "route_id", nullable = false)
-    private Long routeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "route_id")
+    private Route route;
 
-    @Column(name = "road_event_id", nullable = false)
-    private Long roadEventId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "road_event_id")
+    private RoadEvent roadEvent;
 
-    @Column(name = "sent_at")
-    private LocalDateTime sentAt;
-
-    @Column(name = "read_at")
-    private LocalDateTime readAt;
-
-    @Column(name = "message", nullable = false, length = 256)
+    @Column(nullable = false)
     private String message;
+
+    @Column(nullable = false)
+    private boolean isRead = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "update_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Builder
-    public Notification(Long userId, Long routeId, Long roadEventId, LocalDateTime sentAt, LocalDateTime readAt, String message){
-        this.userId = userId;
-        this.routeId = routeId;
-        this.roadEventId = roadEventId;
-        this.sentAt = sentAt;
-        this.readAt = readAt;
-        this.message = message;
-
+    @PrePersist
+    public void prePersist(){
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(LocalDateTime readAt, String message){
-        this.readAt = readAt;
-        this.message = message;
+    @PreUpdate
+    public void preUpdate(){
+        this.updatedAt =LocalDateTime.now();
+    }
 
-        this.updatedAt = LocalDateTime.now();
+    @Builder
+    public Notification(User user, Route route, RoadEvent roadEvent, String message, boolean isRead) {
+        this.user = user;
+        this.route = route;
+        this.roadEvent = roadEvent;
+        this.message = message;
+        this.isRead = isRead;
+    }
+
+    // 읽음 상태로 변경하는 메소드
+    public void markAsRead(){
+        this.isRead = true;
     }
 }

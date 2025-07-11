@@ -6,16 +6,24 @@ import com.example.route_alarm_app.domain.RoadEvent;
 import com.example.route_alarm_app.dto.RoadEventResponseDto;
 import com.example.route_alarm_app.dto.RouteRequestDto;
 import com.example.route_alarm_app.dto.RouteResponseDto;
-import com.example.route_alarm_app.dto.RoadEventRequestDto;
 import com.example.route_alarm_app.repository.RoadEventRepository;
 import com.example.route_alarm_app.repository.RouteRepository;
 import com.example.route_alarm_app.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.io.IOException;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,7 +34,8 @@ public class RouteService {
     private final RouteRepository routeRepository;
     private final UserRepository userRepository;
     private final RoadEventRepository roadEventRepository;
-
+    private final GeometryFactory geometryFactory;
+    private final ObjectMapper objectMapper;
 
     // 경로 생성 메서드
     @Transactional
@@ -34,23 +43,59 @@ public class RouteService {
         User user = userRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
+        LineString path = convertWaypointToLineString(requestDto.getWaypoints());
         String routeUuid = (requestDto.getUuid() != null && !requestDto.getUuid().isEmpty()) ?
                 requestDto.getUuid() : UUID.randomUUID().toString();
 
         Route route = Route.builder()
                 .user(user)
                 .routeName(requestDto.getRouteName())
+                .path(path)
                 .srcLat(requestDto.getSrcLat())
                 .srcLng(requestDto.getSrcLng())
                 .dstLat(requestDto.getDstLat())
                 .dstLng(requestDto.getDstLng())
-                .waypoints(requestDto.getWaypoints())
                 .uuid(routeUuid)
                 .build();
 
         Route savedRoute = routeRepository.save(route);
 
         return convertToDto(savedRoute);
+    }
+
+    // DTO의 waypoints 문자열을 LineString 객체로 변환하는 헬퍼 메소드
+    private LineString convertWaypointToLineString(String waypointsJson){
+        if(waypointsJson == null || waypointsJson.isEmpty()){
+            return null;
+        }
+        try {
+            List<Map<String, Double>> points = objectMapper.readValue(waypointsJson, new TypeReference<>() {});
+            Coordinate[] coordinates = points.stream()
+                    .map(point -> new Coordinate(point.get("lng"), point.get("lat")))
+                    .toArray(Coordinate[]::new);
+            return geometryFactory.createLineString(coordinates);
+        } catch (IOException e){
+            throw new IllegalArgumentException("잘못된 waypoints 형식입니다.", e);
+        }
+    }
+
+    // LineString -> String(JSON) 변환 헬퍼
+    private String convertLineStringToJson(LineString path){
+        if(path == null) {
+            return null;
+        }
+
+        try {
+            Coordinate[] coordinates = path.getCoordinates();
+
+            List<Map<String, Double>> points = Arrays.stream(coordinates)
+                    .map(c -> Map.of("lat", c.y,"lng", c.x))
+                    .collect(Collectors.toList());
+
+            return objectMapper.writeValueAsString(points);
+        } catch (JsonProcessingException e) {
+            return "[]";
+        }
     }
 
     // 특정 경로 조회 메서드
@@ -78,20 +123,20 @@ public class RouteService {
     @Transactional
     public RouteResponseDto updateRoute(Long routeId, RouteRequestDto requestDto) {
         Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new IllegalArgumentException("경로를 찾을 수 없습니다. (ID: " + routeId + ")"));
+                .orElseThrow(() -> new IllegalArgumentException("경로를 찾을 수 없습니다."));
 
-        String finalRouteName = requestDto.getRouteName() != null ? requestDto.getRouteName() : route.getRouteName();
-        BigDecimal finalSrcLat = requestDto.getSrcLat() != null ? requestDto.getSrcLat() : route.getSrcLat();
-        BigDecimal finalSrcLng = requestDto.getSrcLng() != null ? requestDto.getSrcLng() : route.getSrcLng();
-        BigDecimal finalDstLat = requestDto.getDstLat() != null ? requestDto.getDstLat() : route.getDstLat();
-        BigDecimal finalDstLng = requestDto.getDstLng() != null ? requestDto.getDstLng() : route.getDstLng();
-        String finalWaypoints = requestDto.getWaypoints() != null ? requestDto.getWaypoints() : route.getWaypoints();
+        LineString newPath = convertWaypointToLineString(requestDto.getWaypoints());
 
-        route.update(finalRouteName, finalSrcLat, finalSrcLng, finalDstLat, finalDstLng, finalWaypoints);
+        route.update(
+                requestDto.getRouteName(),
+                requestDto.getSrcLat(),
+                requestDto.getSrcLng(),
+                requestDto.getDstLat(),
+                requestDto.getDstLng(),
+                newPath
+        );
 
-        Route updateRoute = routeRepository.save(route);
-
-        return convertToDto(updateRoute);
+        return convertToDto(route);
     }
 
     // 경로 삭제 메서드
@@ -130,7 +175,7 @@ public class RouteService {
                 route.getSrcLng(),
                 route.getDstLat(),
                 route.getDstLng(),
-                route.getWaypoints(),
+                convertLineStringToJson(route.getPath()),
                 route.getCreatedAt(),
                 route.getUpdatedAt(),
                 route.getIsDeleted(),
