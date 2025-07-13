@@ -34,8 +34,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// Spring Boot Validation (Jakarta Validation API)
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	// JPA가 공간 데이터 타입을 처리할 수 있도록 도와주는 라이브러리
-	implementation 'org.hibernate.orm:hibernate-spatial'
+
+	// ===== PostGIS 관련 의존성 =====
+	// Hibernate Spatial (PostGIS 지원)
+	implementation 'org.hibernate.orm:hibernate-spatial:6.5.2.Final'
+	// JTS (Java Topology Suite) - 공간 데이터 처리
+	implementation 'org.locationtech.jts:jts-core:1.19.0'
+
 	// Springdoc OpenAPI (Swagger UI)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 	// Lombok
@@ -49,6 +54,8 @@ dependencies {
 	implementation 'org.locationtech.proj4j:proj4j:1.2.1'
 	// LocalDateTime을 JSON으로 변환하기 위한 라이브러리
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	// Jakarta Annotation API (PostConstruct 등을 위해)
+	implementation 'jakarta.annotation:jakarta.annotation-api'
 
 	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

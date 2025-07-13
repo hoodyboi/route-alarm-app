@@ -40,7 +40,7 @@ public class Route {
     @Column(name = "dst_lng", nullable = false, precision = 10, scale = 7)
     private BigDecimal dstLng;
 
-    @Column(columnDefinition = "geography(LineString, 4326")
+    @Column(columnDefinition = "geography(LineString, 4326)")
     private LineString path;
 
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,13 +26,10 @@ public class RoadEventUpdateService {
     private final RoadEventRepository roadEventRepository;
     private final GeometryFactory geometryFactory;
 
-    private final CoordinateTransform coordinateTransform;
+    private CoordinateTransform coordinateTransform;
 
-    public RoadEventUpdateService(PublicDataApiClient apiClient, RoadEventRepository roadEventRepository, GeometryFactory geometryFactory){
-        this.apiClient = apiClient;
-        this.roadEventRepository = roadEventRepository;
-        this.geometryFactory = geometryFactory;
-
+    @PostConstruct
+    public void init() {
         CRSFactory crsFactory = new CRSFactory();
         CoordinateReferenceSystem grs80 = crsFactory.createFromName("EPSG:5181");
         CoordinateReferenceSystem wgs84 = crsFactory.createFromName("EPSG:4326");
