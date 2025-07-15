@@ -17,47 +17,37 @@ repositories {
 }
 
 dependencies {
-	// JJWT (Java JWT) - Version set to 0.11.5 for compatibility
+	// JJWT (Java JWT)
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// Spring Web
+	// Spring
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// Spring WebFlux (WebClient 사용을 위해 추가)
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	// Spring Data JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	// PostgreSQL Driver
-	implementation 'org.postgresql:postgresql'
-	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	// Spring Boot Validation (Jakarta Validation API)
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	// ===== PostGIS 관련 의존성 =====
-	// Hibernate Spatial (PostGIS 지원)
+	// Database & PostGIS
+	implementation 'org.postgresql:postgresql'
 	implementation 'org.hibernate.orm:hibernate-spatial:6.5.2.Final'
-	// JTS (Java Topology Suite) - 공간 데이터 처리
 	implementation 'org.locationtech.jts:jts-core:1.19.0'
+	implementation 'org.locationtech.proj4j:proj4j:1.2.1'
 
-	// Springdoc OpenAPI (Swagger UI)
+	// Jackson (Data Format)
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+	// API Docs
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-	// Lombok
+
+	// Lombok & DevTools
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	// Spring Boot DevTools (개발 시 편리, 배포 시 제외)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	// Jackson이 XML을 처리할 수 있게 해주는 라이브러리
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
-	// 좌표계 변환을 위한 라이브러리
-	implementation 'org.locationtech.proj4j:proj4j:1.2.1'
-	// LocalDateTime을 JSON으로 변환하기 위한 라이브러리
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	// Jakarta Annotation API (PostConstruct 등을 위해)
-	implementation 'jakarta.annotation:jakarta.annotation-api'
 
-	// Test dependencies
+	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

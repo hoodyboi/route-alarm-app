@@ -9,5 +9,4 @@ class RouteAlarmAppApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

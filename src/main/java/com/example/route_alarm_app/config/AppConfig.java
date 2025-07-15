@@ -3,6 +3,7 @@ package com.example.route_alarm_app.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,14 @@ public class AppConfig {
         // 알 수 없는 속성이 있어도 실패하지 않도록 설정
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
+        return mapper;
+    }
+
+    @Bean
+    public XmlMapper xmlMapper(){
+
+        XmlMapper mapper = new XmlMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper;
     }
 }
