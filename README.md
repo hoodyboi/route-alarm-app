@@ -60,7 +60,7 @@
 
 전체 API 명세는 서버 실행 후 아래 Swagger UI 주소에서 확인하실 수 있습니다.
 
-- **Server**: `http://54.180.87.165:8080/swagger-ui.html`
+- ~~**Server**: `http://54.180.87.165:8080/swagger-ui.html`~~ // ec2 사용량 문제로 서버 꺼둡니다.
 
 ---
 
