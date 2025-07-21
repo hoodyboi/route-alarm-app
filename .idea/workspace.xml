@@ -6,12 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f101d73a-15fa-4a94-b2bf-4d86b621edab" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/RouteAlarmAppApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/RouteAlarmAppApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/client/PublicDataApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/client/PublicDataApiClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/config/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/config/AppConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/controller/TestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/controller/TestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/route_alarm_app/RouteAlarmAppApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/route_alarm_app/RouteAlarmAppApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/controller/RouteAlarmSettingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/controller/RouteAlarmSettingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/dto/RouteAlarmSettingResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/dto/RouteAlarmSettingResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/repository/RoadEventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/repository/RoadEventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/service/RouteAlarmSettingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/service/RouteAlarmSettingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/service/RouteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/route_alarm_app/service/RouteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,6 +1,7 @@
 package com.example.route_alarm_app.repository;
 
 import com.example.route_alarm_app.domain.RoadEvent;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,6 +25,9 @@ public interface RoadEventRepository extends JpaRepository<RoadEvent, Long> {
 
     // 설명에 특정 키워드가 포함된 도로 이벤트를 찾는 메서드
     List<RoadEvent> findByDescriptionContaining(String keyword);
+
+    @Query(value = "SELECT * FROM road_events re WHERE ST_DWithin(re.location, :routePath, :distance)", nativeQuery = true)
+    List<RoadEvent> findEventNearRoutePath(@Param("routePath") LineString routePath, @Param("distance") int distance);
 
     /**
      * 특정 지점으로부터 일정 거리(미터 단위) 내의 모든 도로 이벤트를 찾는 메소드

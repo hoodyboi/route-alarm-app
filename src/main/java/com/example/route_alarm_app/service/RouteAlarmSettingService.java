@@ -21,6 +21,7 @@ public class RouteAlarmSettingService {
     private final RouteAlarmSettingRepository routeAlarmSettingRepository;
 
     // 특정 경로의 알림 설정을 조회하는 메소드
+    @Transactional
     public RouteAlarmSettingResponseDto getAlarmSetting(Long routeId){
         Route route = routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalArgumentException("경로를 찾을 수 없습니다."));

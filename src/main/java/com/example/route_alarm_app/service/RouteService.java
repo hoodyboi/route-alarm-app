@@ -21,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -153,12 +150,14 @@ public class RouteService {
     @Transactional(readOnly = true)
     public List<RoadEventResponseDto> findNearbyEventForRoute(Long routeId, int distance){
         Route route = routeRepository.findById(routeId)
-                .orElseThrow(()-> new IllegalArgumentException("경로를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("경로를 찾을 수 없습니다."));
 
-        double centerLat = (route.getSrcLat().doubleValue() + route.getDstLat().doubleValue()) / 2;
-        double centerLng = (route.getSrcLat().doubleValue() + route.getDstLng().doubleValue()) / 2;
+        LineString routePath = route.getPath();
+        if(routePath == null){
+            return Collections.emptyList();
+        }
 
-        List<RoadEvent> events = roadEventRepository.findEventsWithinDistance(centerLat, centerLng, distance);
+        List<RoadEvent> events = roadEventRepository.findEventNearRoutePath(routePath, distance);
 
         return events.stream()
                 .map(RoadEventResponseDto::new)
