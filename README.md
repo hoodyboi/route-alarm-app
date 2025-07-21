@@ -60,8 +60,7 @@
 
 전체 API 명세는 서버 실행 후 아래 Swagger UI 주소에서 확인하실 수 있습니다.
 
-- **Local**: `http://localhost:8080/swagger-ui.html`
-- **Server**: `http://[서버 IP 주소]:8080/swagger-ui.html`
+- **Server**: `http://54.180.87.165:8080/swagger-ui.html`
 
 ---
 
